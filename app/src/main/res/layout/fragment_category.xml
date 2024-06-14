@@ -7,9 +7,14 @@
     tools:context=".ui.category.CategoryFragment">
 
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/category" />
+        android:layout_height="wrap_content"
+        android:id="@+id/cat_rec"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="6dp"
+        android:layout_marginLeft="6dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
