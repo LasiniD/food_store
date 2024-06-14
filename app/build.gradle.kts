@@ -32,6 +32,12 @@ android {
     }
 }
 
+buildscript{
+    repositories{
+        mavenCentral()
+    }
+}
+
 dependencies {
 
     implementation(libs.appcompat)
@@ -44,10 +50,15 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
+    implementation(libs.firebase.firestore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
     //round imageview
     implementation("com.makeramen:roundedimageview:2.3.0")
+
+    //glide
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
 }
