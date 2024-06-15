@@ -2,6 +2,8 @@ package com.example.foodstore.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -35,6 +37,7 @@ public class NavCategoryActivity extends AppCompatActivity {
     List<NavCategoryDetailedModel> list;
     NavCategoryDetailedAdapter adapter;
     FirebaseFirestore db;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,10 @@ public class NavCategoryActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.nav_cat_det_rec);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        progressBar = findViewById(R.id.progressbar);
+        progressBar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
 
         list = new ArrayList<>();
         adapter = new NavCategoryDetailedAdapter(this,list);
@@ -61,6 +68,8 @@ public class NavCategoryActivity extends AppCompatActivity {
                         NavCategoryDetailedModel navCategoryDetailedModel = documentSnapshot.toObject(NavCategoryDetailedModel.class);
                         list.add(navCategoryDetailedModel);
                         adapter.notifyDataSetChanged();
+                        progressBar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
                     }
                 }
             });
@@ -72,6 +81,8 @@ public class NavCategoryActivity extends AppCompatActivity {
                         NavCategoryDetailedModel navCategoryDetailedModel = documentSnapshot.toObject(NavCategoryDetailedModel.class);
                         list.add(navCategoryDetailedModel);
                         adapter.notifyDataSetChanged();
+                        progressBar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
                     }
                 }
             });
@@ -84,11 +95,15 @@ public class NavCategoryActivity extends AppCompatActivity {
                         NavCategoryDetailedModel navCategoryDetailedModel = documentSnapshot.toObject(NavCategoryDetailedModel.class);
                         list.add(navCategoryDetailedModel);
                         adapter.notifyDataSetChanged();
+                        progressBar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
                     }
                 }
             });
 
         }else {
+            progressBar.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
             Intent intent = new Intent(this, ViewAllActivity.class);
             intent.putExtra("type", type);
             startActivity(intent);

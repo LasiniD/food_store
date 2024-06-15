@@ -158,6 +158,14 @@
 
         </LinearLayout>
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/delete"
+            android:src="@drawable/ic_baseline_delete_24"
+            android:layout_gravity="end"
+            android:padding="5dp"/>
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

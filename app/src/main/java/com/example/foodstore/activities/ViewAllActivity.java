@@ -2,6 +2,8 @@ package com.example.foodstore.activities;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -33,6 +35,7 @@ public class ViewAllActivity extends AppCompatActivity {
     ViewAllAdapter viewAllAdapter;
     List<ViewAllModel> viewAllModelList;
     Toolbar toolbar;
+    ProgressBar progressBar;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -47,6 +50,9 @@ public class ViewAllActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        progressBar = findViewById(R.id.progressbar);
+        progressBar.setVisibility(View.VISIBLE);
+
         firestore = FirebaseFirestore.getInstance();
         String type = getIntent().getStringExtra("type");
 
@@ -54,6 +60,7 @@ public class ViewAllActivity extends AppCompatActivity {
         viewAllAdapter = new ViewAllAdapter(this,viewAllModelList);
 
         recyclerView.setAdapter(viewAllAdapter);
+        recyclerView.setVisibility(View.GONE);
         recyclerView.setLayoutManager(new LinearLayoutManager(ViewAllActivity.this));
 
         //getting fruits
@@ -65,6 +72,8 @@ public class ViewAllActivity extends AppCompatActivity {
                         ViewAllModel viewAllModel = documentSnapshot.toObject(ViewAllModel.class);
                         viewAllModelList.add(viewAllModel);
                         viewAllAdapter.notifyDataSetChanged();
+                        progressBar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
                     }
                 }
             });
@@ -79,6 +88,8 @@ public class ViewAllActivity extends AppCompatActivity {
                         ViewAllModel viewAllModel = documentSnapshot.toObject(ViewAllModel.class);
                         viewAllModelList.add(viewAllModel);
                         viewAllAdapter.notifyDataSetChanged();
+                        progressBar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
                     }
                 }
             });
@@ -93,6 +104,8 @@ public class ViewAllActivity extends AppCompatActivity {
                         ViewAllModel viewAllModel = documentSnapshot.toObject(ViewAllModel.class);
                         viewAllModelList.add(viewAllModel);
                         viewAllAdapter.notifyDataSetChanged();
+                        progressBar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
                     }
                 }
             });
@@ -107,6 +120,8 @@ public class ViewAllActivity extends AppCompatActivity {
                         ViewAllModel viewAllModel = documentSnapshot.toObject(ViewAllModel.class);
                         viewAllModelList.add(viewAllModel);
                         viewAllAdapter.notifyDataSetChanged();
+                        progressBar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
                     }
                 }
             });
@@ -121,6 +136,8 @@ public class ViewAllActivity extends AppCompatActivity {
                         ViewAllModel viewAllModel = documentSnapshot.toObject(ViewAllModel.class);
                         viewAllModelList.add(viewAllModel);
                         viewAllAdapter.notifyDataSetChanged();
+                        progressBar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
                     }
                 }
             });

@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,9 +45,11 @@ public class MyCartsFragment extends Fragment {
     RecyclerView recyclerView;
     CartAdapter cartAdapter;
     List<CartModel> cartModelList;
+    ConstraintLayout constraint1, constraint2;
 
     Button buyNow;
     int totalBill;
+    ProgressBar progressBar;
 
     public MyCartsFragment() {
         // Required empty public constructor
@@ -66,11 +70,17 @@ public class MyCartsFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
+        progressBar = root.findViewById(R.id.progressbar);
+        progressBar.setVisibility(View.VISIBLE);
+
         recyclerView = root.findViewById(R.id.recyclerView);
+        recyclerView.setVisibility(View.GONE);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         buyNow = root.findViewById(R.id.buy_now);
 
         overTotal = root.findViewById(R.id.overTotal);
+        constraint1 = root.findViewById(R.id.constraint1);
+        constraint2 = root.findViewById(R.id.constraint2);
 
         cartModelList = new ArrayList<>();
         cartAdapter = new CartAdapter(getActivity(),cartModelList);
@@ -82,9 +92,25 @@ public class MyCartsFragment extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()){
                             for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()){
+
+                                String documentId = documentSnapshot.getId();
+
                                 CartModel cartModel = documentSnapshot.toObject(CartModel.class);
+
+                                cartModel.setDocumentId(documentId);
+
                                 cartModelList.add(cartModel);
                                 cartAdapter.notifyDataSetChanged();
+                                progressBar.setVisibility(View.GONE);
+                                recyclerView.setVisibility(View.VISIBLE);
+                            }
+                            if (cartModelList.isEmpty()) {
+                                constraint1.setVisibility(View.VISIBLE);
+                                constraint2.setVisibility(View.GONE);
+                                progressBar.setVisibility(View.GONE);
+                            } else {
+                                constraint1.setVisibility(View.GONE);
+                                constraint2.setVisibility(View.VISIBLE);
                             }
 
                             calculateTotalAmount(cartModelList);
@@ -101,8 +127,20 @@ public class MyCartsFragment extends Fragment {
             }
         });
 
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mMessageReceiver,
+                new IntentFilter("CartEmpty"));
+
         return root;
     }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            constraint1.setVisibility(View.VISIBLE);
+            constraint2.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
+        }
+    };
 
     private void calculateTotalAmount(List<CartModel> cartModelList) {
         double totalAmount = 0.0;
@@ -111,6 +149,12 @@ public class MyCartsFragment extends Fragment {
         }
 
         overTotal.setText("Total Amount : "+String.valueOf(totalAmount));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mMessageReceiver);
     }
 
 }
