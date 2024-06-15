@@ -16,7 +16,6 @@
     <string name="menu_carts">Carts</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="offers">Offers</string>
     <string name="profile">Profile</string>
     <string name="my_carts">My Carts</string>
@@ -24,9 +23,14 @@
     <string name="new_products">New Products</string>
     <string name="category">Category</string>
     <string name="home">Home</string>
-    <string name="search_your_item_here">Search Your Item Here...</string>
+    <string name="search_your_item_here">Search Your Item Here…</string>
     <string name="popular_products">Popular Products</string>
     <string name="view_all">View All</string>
     <string name="explore_products">Explore Products</string>
     <string name="recommended">Recommended</string>
+    <string name="description">Description</string>
+    <string name="name">Name</string>
+    <string name="price">Price $</string>
+    <string name="_30">30</string>
+    <string name="_5_0">5.0</string>
 </resources>

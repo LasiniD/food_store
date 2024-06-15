@@ -1,6 +1,8 @@
 package com.example.foodstore.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.foodstore.R;
+import com.example.foodstore.activities.ViewAllActivity;
 import com.example.foodstore.models.HomeCategory;
 
 import java.util.List;
@@ -29,13 +32,22 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.Viewholder> {
     @NonNull
     @Override
     public Viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new Viewholder(LayoutInflater.from(parent.getContext()).inflate(R.layout.home_cat_item,parent,false));
+        return new Viewholder(LayoutInflater.from(parent.getContext()).inflate(R.layout.home_cat_item, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Viewholder holder, int position) {
+    public void onBindViewHolder(@NonNull Viewholder holder, @SuppressLint("RecyclerView") int position) {
         Glide.with(context).load(categoryList.get(position).getImage_url()).into(holder.catImg);
         holder.name.setText(categoryList.get(position).getName());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ViewAllActivity.class);
+                intent.putExtra("type",categoryList.get(position).getType());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -43,7 +55,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.Viewholder> {
         return categoryList.size();
     }
 
-    public class Viewholder extends RecyclerView.ViewHolder{
+    public static class Viewholder extends RecyclerView.ViewHolder{
 
         ImageView catImg;
         TextView name;

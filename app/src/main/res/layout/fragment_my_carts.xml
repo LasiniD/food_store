@@ -3,11 +3,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MyCartsFragment">
 
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/my_carts" />
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/my_cart_img"
+            app:layout_constraintVertical_bias=".3"
+            android:layout_width="400dp"
+            android:layout_height="300dp"
+            android:src="@drawable/addtocartimg"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cart Is Empty!"
+            android:textAlignment="center"
+            android:textColor="@color/purple_700"
+            android:textSize="22sp"
+            app:flow_verticalBias="0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/my_cart_img"
+            app:layout_constraintVertical_bias="0.232" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
