@@ -16,9 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodstore.R;
-import com.example.foodstore.adapters.NavCategoryDetailedAdapter;
 import com.example.foodstore.adapters.ViewAllAdapter;
-import com.example.foodstore.models.NavCategoryDetailedModel;
 import com.example.foodstore.models.PopularModel;
 import com.example.foodstore.models.ViewAllModel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,8 +32,6 @@ import java.util.List;
 public class NavCategoryActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
-    List<NavCategoryDetailedModel> list;
-    NavCategoryDetailedAdapter adapter;
     FirebaseFirestore db;
     ProgressBar progressBar;
 
@@ -55,53 +51,7 @@ public class NavCategoryActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
 
-        list = new ArrayList<>();
-        adapter = new NavCategoryDetailedAdapter(this,list);
-        recyclerView.setAdapter(adapter);
-
-        //getting sweets
-        if (type != null && type.equalsIgnoreCase("sweet")) {
-            db.collection("NavCategoryDetailed").whereEqualTo("type", "sweet").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
-                        NavCategoryDetailedModel navCategoryDetailedModel = documentSnapshot.toObject(NavCategoryDetailedModel.class);
-                        list.add(navCategoryDetailedModel);
-                        adapter.notifyDataSetChanged();
-                        progressBar.setVisibility(View.GONE);
-                        recyclerView.setVisibility(View.VISIBLE);
-                    }
-                }
-            });
-        }else if (type != null && type.equalsIgnoreCase("burger")) {
-            db.collection("NavCategoryDetailed").whereEqualTo("type", "burger").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
-                        NavCategoryDetailedModel navCategoryDetailedModel = documentSnapshot.toObject(NavCategoryDetailedModel.class);
-                        list.add(navCategoryDetailedModel);
-                        adapter.notifyDataSetChanged();
-                        progressBar.setVisibility(View.GONE);
-                        recyclerView.setVisibility(View.VISIBLE);
-                    }
-                }
-            });
-
-        }else if (type != null && type.equalsIgnoreCase("breakfast")) {
-            db.collection("NavCategoryDetailed").whereEqualTo("type", "breakfast").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
-                        NavCategoryDetailedModel navCategoryDetailedModel = documentSnapshot.toObject(NavCategoryDetailedModel.class);
-                        list.add(navCategoryDetailedModel);
-                        adapter.notifyDataSetChanged();
-                        progressBar.setVisibility(View.GONE);
-                        recyclerView.setVisibility(View.VISIBLE);
-                    }
-                }
-            });
-
-        }else {
+        if (type != null){
             progressBar.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
             Intent intent = new Intent(this, ViewAllActivity.class);

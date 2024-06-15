@@ -25,6 +25,7 @@ public class NavCategoryAdapter extends RecyclerView.Adapter<NavCategoryAdapter.
     Context context;
     List<NavCategoryModel> navCategoryModels;
 
+
     public NavCategoryAdapter(Context context, List<NavCategoryModel> navCategoryModels) {
         this.context = context;
         this.navCategoryModels = navCategoryModels;

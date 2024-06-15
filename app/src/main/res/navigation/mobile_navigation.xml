@@ -24,9 +24,9 @@
         tools:layout="@layout/fragment_category" />
     <fragment
         android:id="@+id/nav_orders"
-        android:name="com.example.foodstore.MyOrdersFragment"
+        android:name="com.example.foodstore.ContactUsFragment"
         android:label="@string/menu_orders"
-        tools:layout="@layout/fragment_my_orders" />
+        tools:layout="@layout/fragment_contact_us" />
     <fragment
         android:id="@+id/nav_carts"
         android:name="com.example.foodstore.MyCartsFragment"

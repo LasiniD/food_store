@@ -2,9 +2,9 @@
     <string name="app_name">Food Store</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
+    <string name="nav_header_title">Food Store</string>
+    <string name="nav_header_subtitle">foodstore.food@gmail.com</string>
+    <string name="nav_header_desc">Header</string>
     <string name="action_settings">Settings</string>
 
     <string name="menu_home">Home</string>
@@ -37,4 +37,6 @@
     <string name="description_is_here">description is here...</string>
     <string name="buy_now">Buy Now</string>
     <string name="logout">Logout</string>
+    <string name="about_us">At Food Store, we\'re all about making your life easier and tastier!\n\nWe offer a one-stop shop for all your grocery needs. Whether you\'re looking for fresh fruits and vegetables to fuel your body, delicious eggs for breakfast, or a quick fast food fix, we\'ve got you covered. We even have a selection of fresh fish for those who love healthy and flavorful seafood.\n\nOur focus is on providing quality and convenience. We source our products carefully to ensure they\'re fresh and meet your standards. Plus, with options like fast food alongside fresh produce, you can grab a healthy meal or a quick snack, all in one place.\n\nOur friendly staff is here to help. They\'re happy to answer any questions you have and assist you in finding exactly what you need.\n\nCome visit Food Store today and experience a convenient and satisfying shopping experience!</string>
+    <string name="contact_us">Contact Us</string>
 </resources>

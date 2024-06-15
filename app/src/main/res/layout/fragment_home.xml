@@ -105,7 +105,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/recommended"
+                android:text="About Us"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
 
@@ -122,11 +122,12 @@
 
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:id="@+id/recommended_rec"/>
+            android:text="@string/about_us"
+            android:padding="10dp"/>
+
     </LinearLayout>
 
 
