@@ -1,6 +1,7 @@
 package com.example.foodstore.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.foodstore.R;
+import com.example.foodstore.activities.NavCategoryActivity;
 import com.example.foodstore.models.HomeCategory;
 import com.example.foodstore.models.NavCategoryModel;
 
@@ -39,6 +41,15 @@ public class NavCategoryAdapter extends RecyclerView.Adapter<NavCategoryAdapter.
         holder.name.setText(navCategoryModels.get(position).getName());
         holder.description.setText(navCategoryModels.get(position).getDescription());
         holder.discount.setText(navCategoryModels.get(position).getDiscount());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, NavCategoryActivity.class);
+                intent.putExtra("type",navCategoryModels.get(position).getType());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
