@@ -69,18 +69,24 @@ public class ProfileFragment extends Fragment {
         address = root.findViewById(R.id.profile_address);
         update = root.findViewById(R.id.update);
 
-        //adding profile image for logged in user
+        //adding details of logged in user
         database.getReference().child("Users").child(FirebaseAuth.getInstance().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         UserModel userModel = snapshot.getValue(UserModel.class);
-                        Glide.with(getContext()).load(userModel.getProfileImg()).into(profileImg);
+                        if (userModel != null) {
+                            name.setText(userModel.getName());
+                            email.setText(userModel.getEmail());
+                            number.setText(userModel.getPhoneNumber());
+                            address.setText(userModel.getAddress());
+                            Glide.with(getContext()).load(userModel.getProfileImg()).into(profileImg);
+                        }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-
+                        Toast.makeText(getContext(), "Failed to load user details", Toast.LENGTH_SHORT).show();
                     }
                 });
 

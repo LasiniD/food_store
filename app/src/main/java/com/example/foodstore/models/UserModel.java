@@ -5,6 +5,8 @@ public class UserModel {
     String email;
     String password;
     String profileImg;
+    String phoneNumber;
+    String address;
 
     public UserModel(){
     }
@@ -13,6 +15,22 @@ public class UserModel {
         this.name = name;
         this.email = email;
         this.password = password;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getProfileImg() {
