@@ -95,7 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="0dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/ic_baseline_arrow_forward_ios_24" />
         </LinearLayout>
