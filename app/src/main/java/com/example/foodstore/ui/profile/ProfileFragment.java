@@ -1,8 +1,14 @@
 package com.example.foodstore.ui.profile;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +19,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.foodstore.R;
@@ -22,6 +30,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -34,6 +44,9 @@ public class ProfileFragment extends Fragment {
     FirebaseStorage storage;
     FirebaseAuth auth;
     FirebaseDatabase database;
+
+    private static final int REQUEST_CODE_GALLERY = 33;
+    private static final int REQUEST_CODE_CAMERA = 44;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -51,13 +64,44 @@ public class ProfileFragment extends Fragment {
         address = root.findViewById(R.id.profile_address);
         update = root.findViewById(R.id.update);
 
+        //checking permissions and requesting
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(getActivity(), new String[]{
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+            }, 22);
+        }
+
         profileImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent =  new Intent();
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                startActivityForResult(intent,33);
+                //creating an intent to open the camera or gallery
+                CharSequence[] options = {"Take Photo", "Choose from Gallery"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Select Option");
+                builder.setItems(options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            //camera
+                            Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            if (takePicture.resolveActivity(getActivity().getPackageManager()) != null) {
+                                startActivityForResult(takePicture, 44);
+                            }
+                        } else if (which == 1) {
+                            //gallery
+                            Intent intent = new Intent();
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            intent.setType("image/*");
+                            startActivityForResult(intent, 33);
+                        }
+                    }
+                });
+                builder.show();
             }
         });
         
@@ -78,7 +122,8 @@ public class ProfileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data.getData() != null){
+        if (requestCode == REQUEST_CODE_GALLERY && resultCode == getActivity().RESULT_OK && data != null && data.getData() != null) {
+            //gallery result
             Uri profileUri = data.getData();
             profileImg.setImageURI(profileUri);
 
@@ -88,7 +133,28 @@ public class ProfileFragment extends Fragment {
             reference.putFile(profileUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(getContext(),"Uploaded",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Uploaded", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else if (requestCode == REQUEST_CODE_CAMERA && resultCode == getActivity().RESULT_OK && data != null) {
+            //camera result
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            profileImg.setImageBitmap(imageBitmap);
+
+            //saving bitmap in firebase
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] dataBytes = baos.toByteArray();
+
+            final StorageReference reference = storage.getReference().child("profile_picture")
+                    .child(FirebaseAuth.getInstance().getUid());
+
+            UploadTask uploadTask = reference.putBytes(dataBytes);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(getContext(), "Uploaded", Toast.LENGTH_SHORT).show();
                 }
             });
         }
