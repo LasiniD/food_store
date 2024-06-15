@@ -19,6 +19,7 @@ import com.example.foodstore.adapters.PopularAdapters;
 import com.example.foodstore.databinding.FragmentHomeBinding;
 import com.example.foodstore.models.HomeCategory;
 import com.example.foodstore.models.PopularModel;
+import com.example.foodstore.utils.NetworkUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -44,6 +45,13 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
+
+        if (!NetworkUtil.isNetworkConnected(getContext())) {
+            Toast.makeText(getContext(), "No Internet Connection!", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(getContext(), "Internet Connection Stable", Toast.LENGTH_SHORT).show();
+        }
+
         db = FirebaseFirestore.getInstance();
 
         popularRec = root.findViewById(R.id.pop_rec);

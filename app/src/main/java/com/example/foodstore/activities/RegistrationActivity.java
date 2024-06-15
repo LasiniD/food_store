@@ -17,6 +17,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.foodstore.MainActivity;
 import com.example.foodstore.R;
 import com.example.foodstore.models.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -113,6 +114,11 @@ public class RegistrationActivity extends AppCompatActivity {
                             progressBar.setVisibility(View.GONE);
 
                             Toast.makeText(RegistrationActivity.this,"Registration Successful!",Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
                         }else{
                             progressBar.setVisibility(View.GONE);
                             Toast.makeText(RegistrationActivity.this,"Error : "+task.getException(),Toast.LENGTH_SHORT).show();

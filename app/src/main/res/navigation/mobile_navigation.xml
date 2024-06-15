@@ -23,16 +23,6 @@
         android:label="@string/menu_category"
         tools:layout="@layout/fragment_category" />
     <fragment
-        android:id="@+id/nav_offers"
-        android:name="com.example.foodstore.OffersFragment"
-        android:label="@string/menu_offers"
-        tools:layout="@layout/fragment_offers" />
-    <fragment
-        android:id="@+id/nav_new_products"
-        android:name="com.example.foodstore.NewProductsFragment"
-        android:label="@string/menu_new_products"
-        tools:layout="@layout/fragment_new_products" />
-    <fragment
         android:id="@+id/nav_orders"
         android:name="com.example.foodstore.MyOrdersFragment"
         android:label="@string/menu_orders"
