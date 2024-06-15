@@ -14,6 +14,9 @@
         android:theme="@style/Theme.FoodStore"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".activities.PlaceOrderActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.NavCategoryActivity"
             android:exported="false" />
         <activity
