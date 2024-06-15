@@ -29,6 +29,7 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.example.foodstore.R;
 import com.example.foodstore.models.UserModel;
+import com.example.foodstore.utils.NetworkUtil;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -67,6 +68,12 @@ public class ProfileFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
+        if (!NetworkUtil.isNetworkConnected(getContext())) {
+            Toast.makeText(getContext(), "No Internet Connection!", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(getContext(), "Internet Connection Stable", Toast.LENGTH_SHORT).show();
+        }
 
         View root = inflater.inflate(R.layout.fragment_profile,container,false);
 

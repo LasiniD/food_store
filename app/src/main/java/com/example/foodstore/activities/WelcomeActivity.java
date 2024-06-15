@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodstore.MainActivity;
 import com.example.foodstore.R;
+import com.example.foodstore.utils.NetworkUtil;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class WelcomeActivity extends AppCompatActivity {
@@ -26,6 +27,12 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_welcome);
+
+        if (!NetworkUtil.isNetworkConnected(this)) {
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(this, "Internet Connection Stable", Toast.LENGTH_SHORT).show();
+        }
 
         auth = FirebaseAuth.getInstance();
         progressBar = findViewById(R.id.progressbar);

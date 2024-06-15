@@ -17,10 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.foodstore.activities.PlaceOrderActivity;
 import com.example.foodstore.adapters.CartAdapter;
 import com.example.foodstore.models.CartModel;
+import com.example.foodstore.utils.NetworkUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -54,6 +56,12 @@ public class MyCartsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_my_carts, container, false);
+
+        if (!NetworkUtil.isNetworkConnected(getContext())) {
+            Toast.makeText(getContext(), "No Internet Connection!", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(getContext(), "Internet Connection Stable", Toast.LENGTH_SHORT).show();
+        }
 
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
