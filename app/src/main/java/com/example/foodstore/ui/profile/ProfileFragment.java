@@ -26,7 +26,9 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.example.foodstore.R;
 import com.example.foodstore.models.UserModel;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,7 +45,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileFragment extends Fragment {
 
     CircleImageView profileImg;
-    EditText name, email, number, address;
+    String profileImageUrl;
+    EditText name, email, number, address, password;
     Button update;
 
     FirebaseStorage storage;
@@ -65,6 +68,7 @@ public class ProfileFragment extends Fragment {
         profileImg = root.findViewById(R.id.profile_img);
         name = root.findViewById(R.id.profile_name);
         email = root.findViewById(R.id.profile_email);
+        password = root.findViewById(R.id.profile_password);
         number = root.findViewById(R.id.profile_phone);
         address = root.findViewById(R.id.profile_address);
         update = root.findViewById(R.id.update);
@@ -80,7 +84,11 @@ public class ProfileFragment extends Fragment {
                             email.setText(userModel.getEmail());
                             number.setText(userModel.getPhoneNumber());
                             address.setText(userModel.getAddress());
-                            Glide.with(getContext()).load(userModel.getProfileImg()).into(profileImg);
+                            password.setText(userModel.getPassword());
+                            profileImageUrl = userModel.getProfileImg();
+                            if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+                                Glide.with(getContext()).load(profileImageUrl).into(profileImg);
+                            }
                         }
                     }
 
@@ -142,6 +150,26 @@ public class ProfileFragment extends Fragment {
     }
 
     private void updateUserProfile() {
+        String updatedName = name.getText().toString();
+        String updatedEmail = email.getText().toString();
+        String updatedPhoneNumber = number.getText().toString();
+        String updatedAddress = address.getText().toString();
+        String updatePassword = password.getText().toString();
+
+        UserModel updatedUser = new UserModel(updatedName, updatedEmail, updatePassword,updatedPhoneNumber, updatedAddress, profileImageUrl);
+
+        database.getReference().child("Users").child(FirebaseAuth.getInstance().getUid())
+                .setValue(updatedUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Failed to update profile", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                });
     }
 
     @Override
@@ -165,8 +193,9 @@ public class ProfileFragment extends Fragment {
                     reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
+                            profileImageUrl = uri.toString();
                             database.getReference().child("Users").child(FirebaseAuth.getInstance().getUid())
-                                    .child("profileImg").setValue(uri.toString());
+                                    .child("profileImg").setValue(profileImageUrl);
                             Toast.makeText(getContext(), "Profile Picture Uploaded", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -196,8 +225,9 @@ public class ProfileFragment extends Fragment {
                     reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
+                            profileImageUrl = uri.toString();
                             database.getReference().child("Users").child(FirebaseAuth.getInstance().getUid())
-                                    .child("profileImg").setValue(uri.toString());
+                                    .child("profileImg").setValue(profileImageUrl);
                             Toast.makeText(getContext(), "Profile Picture Uploaded", Toast.LENGTH_SHORT).show();
                         }
                     });

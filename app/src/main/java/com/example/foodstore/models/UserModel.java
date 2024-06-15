@@ -17,6 +17,15 @@ public class UserModel {
         this.password = password;
     }
 
+    public UserModel(String name, String email, String password, String phoneNumber, String address, String profileImg) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.profileImg = profileImg;
+    }
+
     public String getPhoneNumber() {
         return phoneNumber;
     }
