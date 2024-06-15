@@ -28,14 +28,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
 public class PlaceOrderActivity extends AppCompatActivity {
 
-    TextView totalAmount;
-    Button placeOrder;
     ProgressBar progressBar;
     FirebaseFirestore db;
     FirebaseAuth auth;
@@ -51,72 +50,38 @@ public class PlaceOrderActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
-        Intent intent = getIntent();
-        cartModelList = (List<CartModel>) intent.getSerializableExtra("itemList");
+        List<CartModel> list = (ArrayList<CartModel>) getIntent().getSerializableExtra("itemList");
 
-        double totalBill = 0.0;
-        for (CartModel cartModel : cartModelList) {
-            totalBill += cartModel.getTotalPrice();
-        }
+        if (list != null && list.size() > 0){
+            for (CartModel model : list){
+                final HashMap<String, Object> orderMap = new HashMap<>();
 
-        totalAmount.setText("Total Amount: $" + totalBill);
+                orderMap.put("productName", model.getProductName());
+                orderMap.put("productPrice", model.getProductPrice());
+                orderMap.put("currentDate", model.getCurrentDate());
+                orderMap.put("currentTime", model.getCurrentTime());
+                orderMap.put("totalQuantity", model.getTotalQuantity());
+                orderMap.put("totalPrice", model.getTotalPrice());
 
-        placeOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                placeOrder();
+
+                db.collection("CurrentUser").document(auth.getCurrentUser().getUid())
+                        .collection("MyOrders").add(orderMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(PlaceOrderActivity.this, "Order Placed Successfully", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(PlaceOrderActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
             }
-        });
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-    }
-
-    private void placeOrder() {
-        progressBar.setVisibility(View.VISIBLE);
-
-        String saveCurrentDate, saveCurrentTime;
-        Calendar calForDate = Calendar.getInstance();
-
-        SimpleDateFormat currentDate = new SimpleDateFormat("MM dd, yyyy");
-        saveCurrentDate = currentDate.format(calForDate.getTime());
-
-        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
-        saveCurrentTime = currentTime.format(calForDate.getTime());
-
-        final HashMap<String, Object> orderMap = new HashMap<>();
-
-        orderMap.put("orderDate", saveCurrentDate);
-        orderMap.put("orderTime", saveCurrentTime);
-        orderMap.put("totalPrice", totalAmount.getText().toString());
-        orderMap.put("items", cartModelList);
-
-        db.collection("CurrentUser").document(auth.getCurrentUser().getUid())
-                .collection("MyOrders").add(orderMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentReference> task) {
-                        if (task.isSuccessful()) {
-                            db.collection("CurrentUser").document(auth.getCurrentUser().getUid())
-                                    .collection("AddToCart").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            for (DocumentSnapshot doc : task.getResult().getDocuments()) {
-                                                db.collection("CurrentUser").document(auth.getCurrentUser().getUid())
-                                                        .collection("AddToCart").document(doc.getId()).delete();
-                                            }
-                                            Toast.makeText(PlaceOrderActivity.this, "Order Placed Successfully", Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(PlaceOrderActivity.this, MainActivity.class));
-                                            finish();
-                                        }
-                                    });
-                        } else {
-                            Toast.makeText(PlaceOrderActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                        progressBar.setVisibility(View.GONE);
-                    }
-                });
     }
 }
