@@ -6,12 +6,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+import com.example.foodstore.models.ImageModel;
+import com.example.foodstore.utils.ImageUtils;
+import com.example.foodstore.utils.JsonUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,6 +24,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ContactUsFragment extends Fragment {
@@ -28,6 +34,8 @@ public class ContactUsFragment extends Fragment {
     FirebaseFirestore db;
     FirebaseAuth auth;
 
+    ImageView imageView, imageView2, imageView3;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -36,11 +44,17 @@ public class ContactUsFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
+        imageView = view.findViewById(R.id.imageView);
+        imageView2 = view.findViewById(R.id.imageView2);
+        imageView3 = view.findViewById(R.id.imageView3);
+
         contactName = view.findViewById(R.id.contact_name);
         contactEmail = view.findViewById(R.id.contact_email);
         contactPhone = view.findViewById(R.id.contact_phone);
         contactMessage = view.findViewById(R.id.contact_message);
         contactSubmit = view.findViewById(R.id.contact_submit);
+
+        loadImages();
 
         contactSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,4 +101,18 @@ public class ContactUsFragment extends Fragment {
 
         return view;
     }
+
+    private void loadImages() {
+        String json = JsonUtils.loadJSONFromAsset(getContext(), "images.json");
+        List<ImageModel> images = ImageUtils.getImagesFromJson(json);
+
+        if (images != null && images.size() >= 3) {
+            Glide.with(getContext()).load(images.get(0).getUrl()).into(imageView);
+            Glide.with(getContext()).load(images.get(1).getUrl()).into(imageView2);
+            Glide.with(getContext()).load(images.get(2).getUrl()).into(imageView3);
+        } else {
+            Toast.makeText(getContext(), "Failed to load images", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }
